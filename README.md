@@ -1,13 +1,7 @@
 <div align="center">
 <img src="https://raw.githubusercontent.com/tracel-ai/xtask/main/assets/xtask.png" width="256px"/>
 
-<h1>Tracel Xtask</h1>
-
-[![Discord](https://img.shields.io/discord/1038839012602941528.svg?color=7289da&&logo=discord)](https://discord.gg/uPEBbYYDB6)
-[![Current Crates.io Version](https://img.shields.io/crates/v/tracel-xtask)](https://crates.io/crates/tracel-xtask)
-[![Minimum Supported Rust Version](https://img.shields.io/crates/msrv/tracel-xtask)](https://crates.io/crates/tracel-xtask)
-[![Test Status](https://github.com/tracel-ai/xtask/actions/workflows/ci.yml/badge.svg)](https://github.com/tracel-ai/xtask/actions/workflows/ci.yml)
-![license](https://shields.io/badge/license-MIT%2FApache--2.0-blue)
+<h1>Nullvora Xtask</h1>
 
 ---
 
@@ -16,11 +10,11 @@
 
 A collection of easy-to-use and extensible commands to be used in your [xtask CLI][1] based on [clap][2].
 
-We rely on these commands in each of our Tracel repositories. By centralizing our redundant commands we save a big amount
+We rely on these commands in each of our Nullvora repositories. By centralizing our redundant commands we save a big amount
 of code duplication, boilerplate and considerably lower their maintenance cost. This also provides a unified interface across
 all of our repositories.
 
-These commands are not specific to Tracel repositories and they should be pretty much usable in any Rust repositories with
+These commands are not specific to Nullvora repositories and they should be pretty much usable in any Rust repositories with
 a cargo workspace as well as other repositories where Rust is not necessarily the only language. The commands can be easily
 extended using handy proc macros and by following some patterns described in this README.
 
@@ -50,13 +44,13 @@ Edit the `Cargo.toml` file in the root of the workspace to include the following
 members = ["xtask"]
 ```
 
-4. **Add the `tracel-xtask` dependency:**
+4. **Add the `nullvora-xtask` dependency:**
 
 In the `xtask/Cargo.toml` file, add the following under `[dependencies]`:
 
 ```toml
 [dependencies]
-tracel-xtask = "2.0"
+nullvora-xtask = "2.0"
 ```
 
 5. **Build the workspace:**
@@ -65,15 +59,15 @@ tracel-xtask = "2.0"
  cargo build
  ```
 
-Your workspace is now set up with a `xtask` binary crate that depends on `tracel-xtask` version 2.0.x.
+Your workspace is now set up with a `xtask` binary crate that depends on `nullvora-xtask` version 2.0.x.
 
 ### Bootstrap main.rs
 
-1. In the `main.rs` file of the newly created `xtask` crate, import the `tracel_xtask` prelude module and then declare
+1. In the `main.rs` file of the newly created `xtask` crate, import the `nullvora_xtask` prelude module and then declare
    a `Command` enum. Select the base commands you want to use by adding the `macros::base_commands` attribute:
 
 ```rust
-use tracel_xtask::prelude::*;
+use nullvora_xtask::prelude::*;
 
 #[macros::base_commands(
     Build,
@@ -191,7 +185,7 @@ Try it with `cx --help` at the root of the repository.
 All our repositories follow the same directory hierarchy:
 - a `crates` directory which contains all the crates of the workspace
 - an `examples` directory which holds all the examples crates
-- a `xtask` directory which is the binary crate for our xtask CLI using `tracel-xtask`
+- a `xtask` directory which is the binary crate for our xtask CLI using `nullvora-xtask`
 
 ### About tests
 
@@ -199,13 +193,13 @@ As per Cargo convention, [Integration tests][3] are tests contained in a `tests`
 
 Inline tests in `src` directory are called [Unit tests][4].
 
-`tracel-xtask` allows to easily execute them separately using the `test` command.
+`nullvora-xtask` allows to easily execute them separately using the `test` command.
 
 ## Interface generalities
 
 ### Target
 
-There are 4 default targets provided by `tracel-xtask`:
+There are 4 default targets provided by `nullvora-xtask`:
 - `workspace` which targets the cargo workspace, this is the default target
 - `crates` are all the binary crates and library crates
 - `examples` are all the example crates
@@ -309,11 +303,11 @@ In the following sections we will see how to create completely new commands as w
 2. Then, in `mycommand.rs` define the arguments struct with the `declare_command_args` macro and define the `handle_command`
    function. The `declare_command_args` macro takes two parameters, the first is the type of the target enum and the second
    is the type of the subcommand enum if any. If the command has no target or no subcommand then put `None` for each argument
-   respectively. `Target` is the default target type provided by `tracel-xtask`. This type can be extended to support more
+   respectively. `Target` is the default target type provided by `nullvora-xtask`. This type can be extended to support more
    targets as we will see in a later section.
 
 ```rust
-use tracel_xtask::prelude::*;
+use nullvora_xtask::prelude::*;
 
 #[macros::declare_command_args(Target, None)]
 struct MyCommandCmdArgs {}
@@ -335,7 +329,7 @@ pub(crate) mod my_command;
 ```rust
 mod commands;
 
-use tracel_xtask::prelude::*;
+use nullvora_xtask::prelude::*;
 
 #[macros::base_commands(
     Bump,
@@ -386,7 +380,7 @@ strum = {version = "0.26.3", features = ["derive"]}
    in a monorepo:
 
 ```rust
-use tracel_xtask::prelude::*;
+use nullvora_xtask::prelude::*;
 
 #[macros::extend_targets]
 pub enum MyTarget {
@@ -426,7 +420,7 @@ pub fn handle_command(args: ExtendedTargetCmdArgs) -> anyhow::Result<()> {
 ```rust
 mod commands;
 
-use tracel_xtask::prelude::*;
+use nullvora_xtask::prelude::*;
 
 #[macros::base_commands(
     Bump,
@@ -480,7 +474,7 @@ We create a new command called `extended-build-args` which will have an addition
    in your extension, i.e. the target parameter of the macro cannot be `None` if the base command has a `Target`.
 
 ```rust
-use tracel_xtask::prelude::*;
+use nullvora_xtask::prelude::*;
 
 #[macros::extend_command_args(BuildCmdArgs, Target, None)]
 pub struct ExtendedBuildArgsCmdArgs {
@@ -503,7 +497,7 @@ pub fn handle_command(args: ExtendedBuildArgsCmdArgs) -> anyhow::Result<()> {
 ```rust
 mod commands;
 
-use tracel_xtask::prelude::*;
+use nullvora_xtask::prelude::*;
 
 #[macros::base_commands(
     Bump,
@@ -541,7 +535,7 @@ For this one we create a new command called `extended-check-subcommands` which w
 2. Extend the `CheckCommandArgs` struct using the attribute `macros::extend_command_args`:
 
 ```rust
-use tracel_xtask::prelude::*;
+use nullvora_xtask::prelude::*;
 
 #[macros::extend_command_args(CheckCmdArgs, Target, ExtendedCheckSubcommand)]
 pub struct ExtendedCheckedArgsCmdArgs {}
@@ -596,7 +590,7 @@ fn run_my_subcommand(_args: ExtendedCheckedArgsCmdArgs) -> Result<(), anyhow::Er
 ```rust
 mod commands;
 
-use tracel_xtask::prelude::*;
+use nullvora_xtask::prelude::*;
 
 #[macros::base_commands(
     Bump,
@@ -627,23 +621,23 @@ cargo xtask extended-check-subcommands my-check
 
 ## Custom builds and tests
 
-`tracel-xtask` provides helper functions to easily execute custom builds or tests with specific features or build targets (do not confuse
+`nullvora-xtask` provides helper functions to easily execute custom builds or tests with specific features or build targets (do not confuse
 Rust build targets which is an argument of the `cargo build` command with the xtask target we introduced previously).
 
 For instance we can extend the `build` command to build additional crates with custom features or build targets using the helper function:
 
 ```rust
-pub fn handle_command(mut args: tracel_xtask::commands::build::BuildCmdArgs)  -> anyhow::Result<()> {
+pub fn handle_command(mut args: nullvora_xtask::commands::build::BuildCmdArgs)  -> anyhow::Result<()> {
     // regular execution of the build command
-    tracel_xtask::commands::build::handle_command(args)?;
+    nullvora_xtask::commands::build::handle_command(args)?;
 
     // additional crate builds
     // build 'my-crate' with all the features
-    tracel_xtask::utils::helpers::custom_crates_build(vec!["my-crate"], vec!["--all-features"], None, None, "all features")?;
+    nullvora_xtask::utils::helpers::custom_crates_build(vec!["my-crate"], vec!["--all-features"], None, None, "all features")?;
     // build 'my-crate' with specific features
-    tracel_xtask::utils::helpers::custom_crates_build(vec!["my-crate"], vec!["--features", "myfeature1,myfeature2"], None, None, "myfeature1,myfeature2")?;
+    nullvora_xtask::utils::helpers::custom_crates_build(vec!["my-crate"], vec!["--features", "myfeature1,myfeature2"], None, None, "myfeature1,myfeature2")?;
     // build 'my-crate' with a different target than the default one
-    tracel_xtask::utils::helpers::custom_crates_build(vec!["my-crate"], vec!["--target", "thumbv7m-none-eabi"], None, None, "thumbv7m-none-eabi target")?;
+    nullvora_xtask::utils::helpers::custom_crates_build(vec!["my-crate"], vec!["--target", "thumbv7m-none-eabi"], None, None, "thumbv7m-none-eabi target")?;
     Ok(())
 }
 ```
@@ -696,7 +690,7 @@ jobs:
 By convention this command is responsible to run all the checks, builds, and/or tests that validate the code
 before opening a pull request or merge request.
 
-The command `Validate` can been added via the macro `tracel_xtask_macros::commands` like the other commands.
+The command `Validate` can been added via the macro `nullvora_xtask_macros::commands` like the other commands.
 
 By default all the checks from the `check` command are run as well as both unit and integration tests from
 the `test` command.
@@ -821,7 +815,7 @@ cargo xtask publish <NAME>
 ```
 
 As mentioned, this command is often used in a GitHub workflow.
-We provide a Tracel's reusable [publish-crate][8] workflow that makes use of this command.
+We provide a Nullvora's reusable [publish-crate][8] workflow that makes use of this command.
 Here is a simple example with a workflow that publishes two crates A and B with A depending on B.
 
 ```yaml
@@ -834,7 +828,7 @@ on:
 
 jobs:
   publish-B:
-    uses: tracel-ai/github-actions/.github/workflows/publish-crate.yml@v1
+    uses: nullvora-ai/github-actions/.github/workflows/publish-crate.yml@v1
     with:
       crate: B
     secrets:
@@ -842,7 +836,7 @@ jobs:
 
   # --------------------------------------------------------------------------------
   publish-A:
-    uses: tracel-ai/github-actions/.github/workflows/publish-crate.yml@v1
+    uses: nullvora-ai/github-actions/.github/workflows/publish-crate.yml@v1
     with:
       crate: A
     needs:
@@ -859,7 +853,7 @@ coverage info file that can then be uploaded to a service provider like codecov.
 ### Docker
 
 The `docker` command provides `up` and `down` commands to start and stop stacks. The command is integrated with the environment
-configuration mechanism of `tracel-xtask`.
+configuration mechanism of `nullvora-xtask`.
 
 The name of the compose file must follow the template `docker-compose.{env}.yml` with `env` being the shorthand environment name.
 For instance for the development environment the file is named `docker-compose.dev.yml`.
@@ -905,7 +899,7 @@ Commands:
 
 ### Easy CTRL+c management
 
-`tracel-xtask` gives access to two useful macros `register_cleanup` and `handle_cleanup` to easily define some cleanup functions to be executed at
+`nullvora-xtask` gives access to two useful macros `register_cleanup` and `handle_cleanup` to easily define some cleanup functions to be executed at
 a given time during the program as well as whenever the user presses <kbd>CTRL+c</kbd>.
 It is very useful to guard processes while executing some tests and make sure that the state is still cleaned up even if the program is interrupted by
 the user.
@@ -951,7 +945,7 @@ pub(crate) async fn handle_command(
 Then call the `handle_cleanup` macro at the end of your main function to force a cleanup:
 
 ```rs
-use tracel_xtask::prelude::*;
+use nullvora_xtask::prelude::*;
 
 #[macros::base_commands(
     Build,
@@ -972,12 +966,3 @@ fn main() -> anyhow::Result<()> {
     handle_cleanup!();
 }
 ```
-
-[1]: https://github.com/matklad/cargo-xtask
-[2]: https://github.com/clap-rs/clap
-[3]: https://doc.rust-lang.org/book/ch14-03-cargo-workspaces.html
-[4]: https://doc.rust-lang.org/book/ch11-03-test-organization.html#integration-tests
-[5]: https://doc.rust-lang.org/book/ch11-03-test-organization.html#unit-tests
-[6]: https://embarkstudios.github.io/cargo-deny/
-[7]: https://doc.rust-lang.org/beta/unstable-book/compiler-flags/sanitizer.html
-[8]: https://github.com/tracel-ai/github-actions/blob/main/.github/workflows/publish-crate.yml
